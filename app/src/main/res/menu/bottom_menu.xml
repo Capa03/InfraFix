@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:title="Camera"
+        android:icon="@drawable/ic_baseline_camera_alt_24"
+        android:id="@+id/cameraFragment"/>
+
+    <item android:title="History"
+        android:icon="@drawable/ic_baseline_history_24"
+        android:id="@+id/historyFragment"/>
+
+</menu>
