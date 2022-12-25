@@ -1,4 +1,4 @@
-package com.capa.infrafix.History;
+package com.capa.infrafix.Ticket;
 
 public class ViewModelHistory {
 }

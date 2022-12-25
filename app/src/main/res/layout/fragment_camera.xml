@@ -10,7 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="40dp"
-        tools:context=".Camera.FormFragment">
+        tools:context=".Form.FormFragment">
+
+        <EditText
+            android:id="@+id/editTextTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/title_ticket"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:textColorHint="#757575"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButtonGallary" />
 
         <EditText
             android:id="@+id/editTextDescription"
@@ -20,26 +35,11 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/description"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:textColorHint="#757575"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButtonGallary" />
-
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:ems="10"
-            android:hint="@string/date"
             android:inputType="date"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextDescription"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextTitle" />
 
         <Button
             android:id="@+id/buttonSend"
@@ -85,23 +85,23 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLocation"
+            app:layout_constraintTop_toBottomOf="@+id/editTextDate"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <EditText
-            android:id="@+id/editTextLocation"
+            android:id="@+id/editTextDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:autofillHints=""
             android:ems="10"
-            android:hint="@string/location"
+            android:hint="@string/date"
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColorHint="#757575"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextDate"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
         <ImageView
             android:id="@+id/imageViewCapturedToSend"

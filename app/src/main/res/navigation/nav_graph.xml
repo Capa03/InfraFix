@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.capa.infrafix.Camera.FormFragment"
+        android:name="com.capa.infrafix.Form.FormFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" />
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.capa.infrafix.History.HistoryFragment"
+        android:name="com.capa.infrafix.Ticket.TicketFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
 </navigation>

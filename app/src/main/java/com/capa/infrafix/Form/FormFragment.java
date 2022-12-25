@@ -1,28 +1,28 @@
-package com.capa.infrafix.Camera;
+package com.capa.infrafix.Form;
 
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.capa.infrafix.Activity.CameraActivity;
 import com.capa.infrafix.Dummy;
 import com.capa.infrafix.R;
+import com.capa.infrafix.Ticket.Ticket;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -36,11 +36,16 @@ import java.util.List;
 public class FormFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Location mLastLocation;
     private MapView mapView;
     private List<Address> listGeoCode;
-    private ViewModelCamera viewModelCamera;
+    private ViewModelForm viewModelForm;
     private ImageView imageView;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"};
+    private Button send;
+    private EditText description , date,ticketTitle;
+    double lat , lng = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,20 +67,20 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.viewModelCamera = new ViewModelProvider(this).get(ViewModelCamera.class);
+        this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
         this.cacheViews(view);
 
 
-        if(this.viewModelCamera.isLocationPermissionGranted()){
+        if(this.viewModelForm.isLocationPermissionGranted()){
             try{
-                this.listGeoCode = new Geocoder(getContext()).getFromLocationName("Lisboa",1);
+                this.listGeoCode = new Geocoder(getContext()).getFromLocationName("Lisbon",1);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }else{
-            this.viewModelCamera.requestPermission(getActivity());
+            this.viewModelForm.requestPermission(getActivity());
         }
 
         ImageButton openCamera = view.findViewById(R.id.imageButtonCamera);
@@ -83,7 +88,16 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
             CameraActivity.startActivity(getContext());
         });
 
+        send.setOnClickListener(view12 -> {
+            String descriptionValue = this.description.getText().toString();
+            String dateValue = this.date.getText().toString();
+            String titleValue = this.ticketTitle.getText().toString();
+            Ticket ticket = new Ticket(0,titleValue,descriptionValue,dateValue,"",this.lat,this.lng);
+            this.viewModelForm.createTicket(ticket);
+        });
+
     }
+
 
 
     @Override
@@ -94,22 +108,33 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Location location = null;
 
 
         for(String permission : REQUIRED_PERMISSIONS){
             if(ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED){
                 mMap.setMyLocationEnabled(true);
+                location = mMap.getMyLocation();
             }
         }
+
+        if(location != null){
+
+            this.lat = location.getLatitude();
+            this.lng = location.getLongitude();
+
+            LatLng loc = new LatLng(this.lat,this.lng);
+            mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+        }
+
     }
+
+
 
     @Override
     public void onResume() {
@@ -143,5 +168,9 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
 
     private void cacheViews(View view){
         this.imageView = view.findViewById(R.id.imageViewCapturedToSend);
+        this.description = view.findViewById(R.id.editTextDescription);
+        this.date = view.findViewById(R.id.editTextDate);
+        this.send = view.findViewById(R.id.buttonSend);
+        this.ticketTitle = view.findViewById(R.id.editTextTitle);
     }
 }
