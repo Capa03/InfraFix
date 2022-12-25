@@ -1,4 +1,4 @@
-package com.capa.infrafix;
+package com.capa.infrafix.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;

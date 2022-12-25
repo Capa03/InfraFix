@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.capa.infrafix.Camera.CameraFragment"
+        android:name="com.capa.infrafix.Camera.FormFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" />
     <fragment
