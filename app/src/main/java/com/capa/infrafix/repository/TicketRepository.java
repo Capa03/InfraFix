@@ -33,13 +33,17 @@ public class TicketRepository {
     private TicketService ticketService;
 
     public TicketRepository(Context context){
-        this.ticketDAO = AppDatabase.INSTANCE.getTicketDAO();
+        this.ticketDAO = AppDatabase.getInstance(context).getTicketDAO();
         this.ticketService = retrofit.create(TicketService.class);
     }
 
 
     public LiveData<List<Ticket>> getTicketList(){
         return this.ticketDAO.getAllTicket();
+    }
+
+    public LiveData<Ticket> getTicketById(int ticketID){
+        return this.ticketDAO.getTicket(ticketID);
     }
 
     public void refreshTicket(){

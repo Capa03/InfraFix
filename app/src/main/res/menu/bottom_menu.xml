@@ -4,10 +4,10 @@
 
     <item android:title="Camera"
         android:icon="@drawable/ic_baseline_camera_alt_24"
-        android:id="@+id/cameraFragment"/>
+        android:id="@+id/formFragment"/>
 
     <item android:title="History"
         android:icon="@drawable/ic_baseline_history_24"
-        android:id="@+id/historyFragment"/>
+        android:id="@+id/ticketFragment"/>
 
 </menu>

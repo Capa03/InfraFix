@@ -5,14 +5,21 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.capa.infrafix.Dummy;
 import com.capa.infrafix.Ticket.Ticket;
+import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
+
+import java.io.ByteArrayOutputStream;
 
 public class ViewModelForm extends AndroidViewModel {
 
@@ -24,6 +31,7 @@ public class ViewModelForm extends AndroidViewModel {
     public ViewModelForm(@NonNull Application application) {
         super(application);
         this.context = application.getApplicationContext();
+        this.ticketDAO = AppDatabase.getInstance(application.getApplicationContext()).getTicketDAO();
     }
 
 
@@ -60,6 +68,15 @@ public class ViewModelForm extends AndroidViewModel {
     }
 
     public void createTicket(Ticket ticket){
-        new Thread(()-> this.ticketDAO.createTicket(new Ticket(ticket.getTicketId(),ticket.getSubject(), ticket.getDescription(), ticket.getDate(), ticket.getPictureTicket(), ticket.getLat(), ticket.getLng()))).start();
+        new Thread(()-> ticketDAO.createTicket(new Ticket(0,ticket.getSubject(), ticket.getDescription(), ticket.getDate(), ticket.getPictureTicket(), ticket.getLat(), ticket.getLng()))).start();
     }
+
+    public String BitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
+        byte[] bytes = baos.toByteArray();
+        String temp = Base64.encodeToString(bytes,Base64.DEFAULT);
+        return temp;
+    }
+
 }

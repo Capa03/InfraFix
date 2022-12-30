@@ -36,7 +36,6 @@ import java.util.List;
 public class FormFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Location mLastLocation;
     private MapView mapView;
     private List<Address> listGeoCode;
     private ViewModelForm viewModelForm;
@@ -45,6 +44,8 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
     private Button send;
     private EditText description , date,ticketTitle;
     double lat , lng = 0;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_camera, container, false);
+        View view = inflater.inflate(R.layout.fragment_form, container, false);
         this.mapView = (MapView) view.findViewById(R.id.mapView);
         this.mapView.onCreate(savedInstanceState);
         this.mapView.getMapAsync(this);
@@ -70,15 +71,12 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
         this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
         this.cacheViews(view);
 
-
         if(this.viewModelForm.isLocationPermissionGranted()){
             try{
                 this.listGeoCode = new Geocoder(getContext()).getFromLocationName("Lisbon",1);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }else{
             this.viewModelForm.requestPermission(getActivity());
         }
@@ -92,9 +90,24 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
             String descriptionValue = this.description.getText().toString();
             String dateValue = this.date.getText().toString();
             String titleValue = this.ticketTitle.getText().toString();
-            Ticket ticket = new Ticket(0,titleValue,descriptionValue,dateValue,"",this.lat,this.lng);
+            String bitmap = this.viewModelForm.BitmapToString(Dummy.getInstance().getBitmap());
+
+            Ticket ticket = new Ticket(0,titleValue,descriptionValue,dateValue,bitmap,this.lat,this.lng);
+
             this.viewModelForm.createTicket(ticket);
         });
+
+   /*     this.mMap.setOnMapClickListener(latLng -> {
+
+            Location location = new Location("Test");
+            location.setLatitude(latLng.latitude);
+            location.setLongitude(latLng.longitude);
+
+            LatLng newLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions().position(newLatLng).title(newLatLng.toString());
+
+            mMap.addMarker(markerOptions);
+        });*/
 
     }
 
@@ -114,25 +127,22 @@ public class FormFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         Location location = null;
 
-
         for(String permission : REQUIRED_PERMISSIONS){
             if(ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED){
                 mMap.setMyLocationEnabled(true);
                 location = mMap.getMyLocation();
             }
         }
-
-        if(location != null){
-
+        if(location !=null){
             this.lat = location.getLatitude();
             this.lng = location.getLongitude();
-
             LatLng loc = new LatLng(this.lat,this.lng);
             mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
         }
 
     }
+
 
 
 

@@ -28,6 +28,8 @@ public class Ticket {
         this.lng = lng;
     }
 
+
+
     public long getTicketId() {
         return ticketId;
     }

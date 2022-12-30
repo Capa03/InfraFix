@@ -3,16 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/cameraFragment">
+    app:startDestination="@id/formFragment">
 
     <fragment
-        android:id="@+id/cameraFragment"
+        android:id="@+id/formFragment"
         android:name="com.capa.infrafix.Form.FormFragment"
-        android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" />
+        android:label="fragment_form"
+        tools:layout="@layout/fragment_form" />
     <fragment
-        android:id="@+id/historyFragment"
+        android:id="@+id/ticketFragment"
         android:name="com.capa.infrafix.Ticket.TicketFragment"
-        android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        android:label="fragment_ticket"
+        tools:layout="@layout/fragment_ticket">
+        <action
+            android:id="@+id/action_ticketFragment_to_ticketDetailFragment5"
+            app:destination="@id/ticketDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ticketDetailFragment"
+        android:name="com.capa.infrafix.Ticket.TicketDetailFragment"
+        android:label="fragment_ticket_detail"
+        tools:layout="@layout/fragment_ticket_detail">
+        <argument
+            android:name="ticketId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
