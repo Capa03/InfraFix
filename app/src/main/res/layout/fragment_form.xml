@@ -96,7 +96,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/date"
-            android:inputType="textPersonName"
+            android:inputType="date"
             android:minHeight="48dp"
             android:textColorHint="#757575"
             app:layout_constraintEnd_toEndOf="parent"
