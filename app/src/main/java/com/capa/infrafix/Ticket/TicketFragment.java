@@ -57,7 +57,7 @@ public class TicketFragment extends Fragment {
 
             @Override
             public void onTicketLongClicked(int position, Ticket ticket) {
-
+                viewModelTicket.deleteTicket(ticket);
             }
         });
 

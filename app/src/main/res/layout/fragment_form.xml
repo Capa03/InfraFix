@@ -35,7 +35,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/description"
-            android:inputType="date"
+            android:inputType="textLongMessage|textPersonName"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

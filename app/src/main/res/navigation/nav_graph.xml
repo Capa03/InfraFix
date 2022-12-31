@@ -9,7 +9,11 @@
         android:id="@+id/formFragment"
         android:name="com.capa.infrafix.Form.FormFragment"
         android:label="fragment_form"
-        tools:layout="@layout/fragment_form" />
+        tools:layout="@layout/fragment_form" >
+        <action
+            android:id="@+id/action_formFragment_to_successFragment"
+            app:destination="@id/successFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ticketFragment"
         android:name="com.capa.infrafix.Ticket.TicketFragment"
@@ -29,4 +33,9 @@
             android:name="ticketId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.capa.infrafix.SuccessFragment"
+        android:label="fragment_success"
+        tools:layout="@layout/fragment_success" />
 </navigation>

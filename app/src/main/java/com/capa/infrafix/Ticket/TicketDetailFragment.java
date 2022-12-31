@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.capa.infrafix.R;
@@ -20,14 +22,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class TicketDetailFragment extends Fragment implements OnMapReadyCallback{
+
+public class TicketDetailFragment extends Fragment implements OnMapReadyCallback {
 
     private ImageView imageView;
     private TextView title, date, description;
     private MapView mapView;
     private ViewModelTicket viewModel;
-    private LatLng latLng;
+    private TicketDetailFragmentArgs args;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,23 +57,25 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
         super.onViewCreated(view, savedInstanceState);
         this.cacheViews(view);
         this.viewModel = new ViewModelProvider(this).get(ViewModelTicket.class);
-        TicketDetailFragmentArgs args = TicketDetailFragmentArgs.fromBundle(getArguments());
+        this.args = TicketDetailFragmentArgs.fromBundle(getArguments());
 
         this.viewModel.getTicketById(args.getTicketId()).observe(getViewLifecycleOwner(), ticket -> {
             this.imageView.setImageBitmap(this.viewModel.StringToBitmap(ticket.getPictureTicket()));
             this.title.setText(ticket.getSubject());
             this.date.setText(ticket.getDate());
             this.description.setText(ticket.getDescription());
-            //this.latLng = new LatLng(ticket.getLat(),ticket.getLng());
         });
     }
 
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        this.latLng = new LatLng(37.9584512,-7.3990144);
-        googleMap.addMarker(new MarkerOptions().position(this.latLng).title("Position"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(this.latLng));
+        this.viewModel.getTicketById(args.getTicketId()).observe(getViewLifecycleOwner(), ticket -> {
+            LatLng latLng = new LatLng(ticket.getLat(), ticket.getLng());
+            googleMap.addMarker(new MarkerOptions().position(latLng).title("Position"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        });
+
     }
 
     @Override
@@ -100,7 +108,7 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
         this.mapView.onLowMemory();
     }
 
-    private void cacheViews(View view){
+    private void cacheViews(View view) {
         this.imageView = view.findViewById(R.id.imageViewTicketDetails);
         this.title = view.findViewById(R.id.textViewTicketDetailsTitle);
         this.date = view.findViewById(R.id.textViewTicketDetailsDate);

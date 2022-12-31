@@ -19,12 +19,13 @@ import com.capa.infrafix.Form.ViewModelForm;
 import com.capa.infrafix.Dummy;
 import com.capa.infrafix.R;
 
-public class CameraActivity extends AppCompatActivity {
+public class FormCaptureImageActivity extends AppCompatActivity {
 
     private ViewModelForm viewModelForm;
     private Activity activity = this;
-    public static void startActivity(Context context){
-        Intent intent = new Intent(context,CameraActivity.class);
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, FormCaptureImageActivity.class);
         context.startActivity(intent);
     }
 
@@ -38,7 +39,7 @@ public class CameraActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (result) -> {
-            if(result.getResultCode() == Activity.RESULT_OK) {
+            if (result.getResultCode() == Activity.RESULT_OK) {
                 // you will get result here in result.data
                 Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
                 Dummy.getInstance().setBitmap(imageBitmap);
@@ -48,7 +49,6 @@ public class CameraActivity extends AppCompatActivity {
         startForResult.launch(intent);
 
     }
-
 
 
     @Override

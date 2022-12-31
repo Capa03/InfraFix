@@ -23,6 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         "TicketDB").build();
             }
         }
+        INSTANCE.getOpenHelper().getWritableDatabase();
         return INSTANCE;
     }
 }

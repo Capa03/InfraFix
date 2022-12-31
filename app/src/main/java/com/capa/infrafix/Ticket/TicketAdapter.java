@@ -46,6 +46,11 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         holder.root.setOnClickListener(view -> {
             listener.onTicketClicked(position, ticket);
         });
+
+        holder.root.setOnLongClickListener(view -> {
+            listener.onTicketLongClicked(position,ticket);
+            return true;
+        });
     }
 
     @Override
