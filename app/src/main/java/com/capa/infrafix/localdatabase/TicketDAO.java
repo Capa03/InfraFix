@@ -28,4 +28,5 @@ public interface TicketDAO {
 
     @Delete
     void deleteTicket(Ticket ticket);
+
 }

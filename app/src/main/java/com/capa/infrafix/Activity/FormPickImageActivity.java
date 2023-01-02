@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,10 +33,8 @@ import com.capa.infrafix.R;
 import java.io.IOException;
 
 public class FormPickImageActivity extends AppCompatActivity {
-
-
     private ImageView mImageView;
-
+    private ViewModelPickImage viewModel;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, FormPickImageActivity.class);
@@ -46,11 +45,11 @@ public class FormPickImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.viewModel = new ViewModelProvider(this).get(ViewModelPickImage.class);
         this.mImageView = findViewById(R.id.imageViewCapturedToSend);
         setContentView(R.layout.activity_form_pick_image);
 
-        this.setupPermissions(this);
+        this.viewModel.setupPermissions(this);
 
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -79,25 +78,9 @@ public class FormPickImageActivity extends AppCompatActivity {
         if (requestCode == 101) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Check the permissions again", Toast.LENGTH_SHORT).show();
-                makeRequest(this);
+                this.viewModel.makeRequest(this);
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-    public void setupPermissions(Activity activity) {
-
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED && permission1 != PackageManager.PERMISSION_GRANTED ) {
-            makeRequest(activity);
-        }
-    }
-
-
-    public void makeRequest(Activity activity) {
-        String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(activity, permissions, 101);
-    }
-
 }

@@ -69,6 +69,7 @@ public class FormFragment extends Fragment  {
         View view = inflater.inflate(R.layout.fragment_form, container, false);
         this.mapView = (MapView) view.findViewById(R.id.mapView);
         this.mapView.onCreate(savedInstanceState);
+
         this.mapView.getMapAsync(googleMap -> {
             mMap = googleMap;
 
