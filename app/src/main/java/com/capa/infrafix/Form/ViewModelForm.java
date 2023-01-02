@@ -48,7 +48,6 @@ public class ViewModelForm extends AndroidViewModel {
 
     public void setupPermissions(Activity activity) {
         int permission = ContextCompat.checkSelfPermission(this.context, Manifest.permission.CAMERA);
-
         if (permission != PackageManager.PERMISSION_GRANTED) {
             makeRequest(activity);
         }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,13 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private NavController navController;
-
+    private ViewModelMain viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        this.viewModel = new ViewModelProvider(this).get(ViewModelMain.class);
         this.bottomMenu();
-        this.setupPermissions(this);
+        this.viewModel.setupPermissions(this);
     }
 
     private void bottomMenu(){
@@ -58,25 +59,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 101) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Check the permissions again", Toast.LENGTH_SHORT).show();
-                makeRequest(this);
+                this.viewModel.makeRequest(this);
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-    public void setupPermissions(Activity activity) {
-
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permission != PackageManager.PERMISSION_GRANTED && permission1 != PackageManager.PERMISSION_GRANTED ) {
-            makeRequest(activity);
-        }
-    }
-
-
-    public void makeRequest(Activity activity) {
-        String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-        ActivityCompat.requestPermissions(activity, permissions, 101);
-    }
-
 }

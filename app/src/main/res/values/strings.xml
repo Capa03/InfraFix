@@ -11,4 +11,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="thank_you_for_your_report">Thank you for your report!</string>
+    <string name="check_your_ticket_page_form_more_details">Check Your Ticket Page form more Details!</string>
+    <string name="back">Back</string>
+    <string name="subject">Subject</string>
+    <string name="form">Form</string>
+    <string name="ticket">Ticket</string>
 </resources>

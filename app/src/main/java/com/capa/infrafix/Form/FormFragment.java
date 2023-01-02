@@ -103,7 +103,7 @@ public class FormFragment extends Fragment  {
         this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
         this.cacheViews(view);
 
-        if (!this.viewModelForm.isLocationPermissionGranted()) {
+       if (!this.viewModelForm.isLocationPermissionGranted()) {
             this.viewModelForm.requestPermission(getActivity());
         }
 

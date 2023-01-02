@@ -6,6 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -31,10 +33,8 @@ import java.io.IOException;
 
 public class FormPickImageActivity extends AppCompatActivity {
 
-    private static final int PERMISSION_CODE = 1001;
-    private static final int IMAGE_PICK_CODE = 1000;
+
     private ImageView mImageView;
-    private String id = "";
 
 
     public static void startActivity(Context context) {
@@ -48,26 +48,10 @@ public class FormPickImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.mImageView = findViewById(R.id.imageViewCapturedToSend);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                //Permissao nao garantida
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                //Mostrar popup runTime da Permission
-                requestPermissions(permissions, PERMISSION_CODE);
-            } else {
-                // Permissao aceite
-                pickImageFromGallery();
-            }
-        } else {
-            // Se o System OS Esta a baixo do Lollipop
-            pickImageFromGallery();
-        }
         setContentView(R.layout.activity_form_pick_image);
-    }
 
+        this.setupPermissions(this);
 
-    private void pickImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
 
@@ -88,18 +72,32 @@ public class FormPickImageActivity extends AppCompatActivity {
         startForResult.launch(intent);
     }
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 101) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Check the permissions again", Toast.LENGTH_SHORT).show();
+                makeRequest(this);
+            }
+        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permission e garantida
-                    pickImageFromGallery();
-                } else {
-                    //Permission e rejeitada
-                    Toast.makeText(this, "Permissao rejeitada!", Toast.LENGTH_SHORT).show();
-                }
+    }
+
+    public void setupPermissions(Activity activity) {
+
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED && permission1 != PackageManager.PERMISSION_GRANTED ) {
+            makeRequest(activity);
         }
     }
+
+
+    public void makeRequest(Activity activity) {
+        String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(activity, permissions, 101);
+    }
+
 }

@@ -37,7 +37,6 @@ public class TicketRepository {
         this.ticketService = retrofit.create(TicketService.class);
     }
 
-
     public LiveData<List<Ticket>> getTicketList(){
         return this.ticketDAO.getAllTicket();
     }
@@ -45,6 +44,7 @@ public class TicketRepository {
     public LiveData<Ticket> getTicketById(int ticketID){
         return this.ticketDAO.getTicket(ticketID);
     }
+    
 
     public void refreshTicket(){
         this.ticketService.getTicketList().enqueue(new Callback<List<Ticket>>() {
