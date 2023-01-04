@@ -9,7 +9,6 @@ import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
 import com.capa.infrafix.remote.TicketService;
 
-import java.net.ContentHandler;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

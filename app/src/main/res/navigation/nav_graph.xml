@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/formFragment"
         android:name="com.capa.infrafix.Form.FormFragment"
-        android:label="fragment_form"
-        tools:layout="@layout/fragment_form" >
+        android:label="@string/form"
+        tools:layout="@layout/fragment_form">
         <action
             android:id="@+id/action_formFragment_to_successFragment"
             app:destination="@id/successFragment" />
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/ticketFragment"
         android:name="com.capa.infrafix.Ticket.TicketFragment"
-        android:label="fragment_ticket"
+        android:label="@string/ticket"
         tools:layout="@layout/fragment_ticket">
         <action
             android:id="@+id/action_ticketFragment_to_ticketDetailFragment5"
@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/ticketDetailFragment"
         android:name="com.capa.infrafix.Ticket.TicketDetailFragment"
-        android:label="fragment_ticket_detail"
+        android:label="@string/details"
         tools:layout="@layout/fragment_ticket_detail">
         <argument
             android:name="ticketId"
@@ -37,5 +37,9 @@
         android:id="@+id/successFragment"
         android:name="com.capa.infrafix.SuccessFragment"
         android:label="fragment_success"
-        tools:layout="@layout/fragment_success" />
+        tools:layout="@layout/fragment_success" >
+        <action
+            android:id="@+id/action_successFragment_to_formFragment"
+            app:destination="@id/formFragment" />
+    </fragment>
 </navigation>

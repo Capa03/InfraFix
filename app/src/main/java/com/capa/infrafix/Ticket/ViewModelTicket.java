@@ -13,7 +13,6 @@ import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
 import com.capa.infrafix.repository.TicketRepository;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class ViewModelTicket extends AndroidViewModel {
@@ -38,7 +37,7 @@ public class ViewModelTicket extends AndroidViewModel {
     }
 
     public void deleteTicket(Ticket ticket){
-        new Thread(() -> ticketDAO.deleteTicket(ticket));
+        new Thread(() -> ticketDAO.deleteTicket(ticket)).start();
     }
 
     public Bitmap StringToBitmap(String encodedString){

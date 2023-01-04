@@ -1,5 +1,7 @@
 package com.capa.infrafix.Ticket;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.capa.infrafix.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,9 +24,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class TicketDetailFragment extends Fragment implements OnMapReadyCallback {
 
@@ -33,12 +32,19 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
     private MapView mapView;
     private ViewModelTicket viewModel;
     private TicketDetailFragmentArgs args;
-
-
+    private MainActivityNavBar mainActivityNavBar;
+    private View view;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(view).popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -52,19 +58,27 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.cacheViews(view);
         this.viewModel = new ViewModelProvider(this).get(ViewModelTicket.class);
         this.args = TicketDetailFragmentArgs.fromBundle(getArguments());
+        this.view = view;
+
+        String titleTicket = getResources().getString(R.string.title_ticket);
+        String dateTicket = getResources().getString(R.string.date);
+        String descriptionTicket = getResources().getString(R.string.description);
 
         this.viewModel.getTicketById(args.getTicketId()).observe(getViewLifecycleOwner(), ticket -> {
             this.imageView.setImageBitmap(this.viewModel.StringToBitmap(ticket.getPictureTicket()));
-            this.title.setText(ticket.getSubject());
-            this.date.setText(ticket.getDate());
-            this.description.setText(ticket.getDescription());
+            this.title.setText(titleTicket + " : "+ ticket.getSubject());
+            this.date.setText(dateTicket + " : "+ ticket.getDate());
+            this.description.setText(descriptionTicket + " : "+ ticket.getDescription());
         });
+
+        this.mainActivityNavBar.hideNavBar();
     }
 
 
@@ -76,6 +90,18 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         });
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivityNavBar)
+            this.mainActivityNavBar = (MainActivityNavBar) context;
+    }
+
+    public interface MainActivityNavBar {
+        void hideNavBar();
+        void showNavBar();
     }
 
     @Override

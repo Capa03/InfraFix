@@ -1,11 +1,5 @@
 package com.capa.infrafix.Activity;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +9,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.capa.infrafix.Form.ViewModelForm;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.capa.infrafix.Dummy;
+import com.capa.infrafix.Form.ViewModelForm;
 import com.capa.infrafix.R;
 
 public class FormCaptureImageActivity extends AppCompatActivity {
@@ -47,6 +47,7 @@ public class FormCaptureImageActivity extends AppCompatActivity {
             }
         });
         startForResult.launch(intent);
+
 
     }
 

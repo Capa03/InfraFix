@@ -1,23 +1,22 @@
 package com.capa.infrafix.Form;
 
-import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,7 +33,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -42,11 +40,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class FormFragment extends Fragment  {
+public class FormFragment extends Fragment {
 
     private GoogleMap mMap;
     private MapView mapView;
-
+    private View view;
     private ViewModelForm viewModelForm;
     private ImageView imageView;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"};
@@ -54,13 +52,28 @@ public class FormFragment extends Fragment  {
     private EditText description, date, ticketTitle;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private List<Address> addresses;
-
+    private MainActivityNavBar mainActivityNavBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.do_you_want_leave_us);
+
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> getActivity().finish());
+                builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,45 +116,91 @@ public class FormFragment extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
         this.cacheViews(view);
-
-       if (!this.viewModelForm.isLocationPermissionGranted()) {
+        this.view = view;
+        if (!this.viewModelForm.isLocationPermissionGranted()) {
             this.viewModelForm.requestPermission(getActivity());
         }
 
 
-        ImageButton openCamera = view.findViewById(R.id.imageButtonCamera);
+        Button openCamera = view.findViewById(R.id.imageButtonCamera);
         openCamera.setOnClickListener(view1 -> {
             FormCaptureImageActivity.startActivity(getContext());
         });
 
-        ImageButton openGallery = view.findViewById(R.id.imageButtonGallary);
+        Button openGallery = view.findViewById(R.id.imageButtonGallary);
         openGallery.setOnClickListener(view13 -> {
             FormPickImageActivity.startActivity(getContext());
         });
 
         send.setOnClickListener(view12 -> {
+            Boolean somethingWrong = false;
+            String titleTicket = getResources().getString(R.string.TitleEmpty);
+            String dateTicket = getResources().getString(R.string.DateEmpty);
+            String descriptionTicket = getResources().getString(R.string.DescriptionEmpty);
+            String bitmap = "";
             String descriptionValue = this.description.getText().toString();
             String dateValue = this.date.getText().toString();
             String titleValue = this.ticketTitle.getText().toString();
-            String bitmap = this.viewModelForm.BitmapToString(Dummy.getInstance().getBitmap());
 
-            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, bitmap, this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
-
-            if(this.viewModelForm.createTicket(ticket)){
-                //TODO New Fragment
-                this.description.setText("");
-                this.date.setText("");
-                this.ticketTitle.setText("");
-                this.imageView.setImageResource(android.R.color.transparent);
-                NavDirections action = FormFragmentDirections.actionFormFragmentToSuccessFragment();
-                Navigation.findNavController(view).navigate(action);
+            if (Dummy.getInstance().getBitmap() != null) {
+                bitmap = this.viewModelForm.BitmapToString(Dummy.getInstance().getBitmap());
             }
 
-            Toast.makeText(getContext(),"Created",Toast.LENGTH_SHORT).show();
+            if(descriptionValue.isEmpty()){
+                this.description.setError(descriptionTicket);
+                somethingWrong = true;
+            }
+            if(dateValue.isEmpty()){
+                this.date.setError(dateTicket);
+                somethingWrong = true;
+            }
+            if(titleValue.isEmpty()){
+                this.ticketTitle.setError(titleTicket);
+                somethingWrong = true;
+            }
+
+            if(Dummy.getInstance().getBitmap() == null){
+                Toast.makeText(getContext(),R.string.ImageEmpty,Toast.LENGTH_SHORT).show();
+                somethingWrong = true;
+            }
+
+            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, bitmap, this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
+            if(!somethingWrong) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.do_you_want_leave_us);
+
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                    this.viewModelForm.createTicket(ticket);
+                    this.description.setText("");
+                    this.date.setText("");
+                    this.ticketTitle.setText("");
+                    this.imageView.setImageResource(android.R.color.transparent);
+
+                    NavDirections action = FormFragmentDirections.actionFormFragmentToSuccessFragment();
+                    Navigation.findNavController(view).navigate(action);
+                });
+
+                builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         });
 
         this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        this.mainActivityNavBar.showNavBar();
+    }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivityNavBar)
+            this.mainActivityNavBar = (MainActivityNavBar) context;
+    }
+
+    public interface MainActivityNavBar {
+        void hideNavBar();
+
+        void showNavBar();
     }
 
 
@@ -149,8 +208,10 @@ public class FormFragment extends Fragment  {
     public void onStart() {
         super.onStart();
         this.mapView.onStart();
+        this.imageView.setVisibility(View.GONE);
 
         if (Dummy.getInstance().getBitmap() != null) {
+            this.imageView.setVisibility(View.VISIBLE);
             imageView.setImageBitmap(Dummy.getInstance().getBitmap());
         }
     }

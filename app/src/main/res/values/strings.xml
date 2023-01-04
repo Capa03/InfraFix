@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">InfraFix</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="preview_area" />
     <string name="capture" />
     <string name="description">Description</string>
@@ -8,7 +8,7 @@
     <string name="title_ticket">Title</string>
     <string name="button_send">Send</string>
     <string name="todo">TODO</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="thank_you_for_your_report">Thank you for your report!</string>
     <string name="check_your_ticket_page_form_more_details">Check Your Ticket Page form more Details!</string>
@@ -16,4 +16,13 @@
     <string name="subject">Subject</string>
     <string name="form">Form</string>
     <string name="ticket">Ticket</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="do_you_want_leave_us">Do You Want Leave Us?</string>
+    <string name="details">Details</string>
+    <string name="delete">Are you Sure That you Want to Delete This Ticket?</string>
+    <string name="TitleEmpty">Title Can not be Empty</string>
+    <string name="DescriptionEmpty">Description Can not be Empty</string>
+    <string name="DateEmpty">Date Can not be Empty</string>
+    <string name="ImageEmpty">Image Can not be Empty</string>
 </resources>

@@ -12,16 +12,18 @@
         android:padding="40dp"
         tools:context=".Form.FormFragment">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint="@string/title_ticket"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:padding="4dp"
             android:textColorHint="#757575"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,10 +35,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint="@string/description"
             android:inputType="textLongMessage|textPersonName"
             android:minHeight="48dp"
+            android:padding="4dp"
+            android:textColorHint="#757575"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextTitle" />
@@ -52,19 +57,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mapView" />
 
-        <ImageButton
+        <Button
             android:id="@+id/imageButtonCamera"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:minHeight="48dp"
+            android:text="Camera"
+            app:icon="@drawable/ic_baseline_camera_alt_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewCapturedToSend"
-            app:srcCompat="@drawable/ic_baseline_camera_alt_24"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <ImageButton
+        <Button
             android:id="@+id/imageButtonGallary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,7 +80,9 @@
             android:minHeight="48dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewCapturedToSend"
-            app:srcCompat="@drawable/ic_baseline_history_24"
+            app:icon="@drawable/gallery"
+            android:text="Gallery"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.gms.maps.MapView
@@ -94,10 +103,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:autofillHints=""
+            android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:hint="@string/date"
             android:inputType="date"
             android:minHeight="48dp"
+            android:padding="4dp"
             android:textColorHint="#757575"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,6 +122,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

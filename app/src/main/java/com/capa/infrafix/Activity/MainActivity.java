@@ -1,31 +1,32 @@
 package com.capa.infrafix.Activity;
 
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.widget.Toast;
-
+import com.capa.infrafix.Form.FormFragment;
 import com.capa.infrafix.R;
-import com.capa.infrafix.databinding.ActivityMainBinding;
+import com.capa.infrafix.SuccessFragment;
+import com.capa.infrafix.Ticket.TicketDetailFragment;
+import com.capa.infrafix.Ticket.TicketFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TicketDetailFragment.MainActivityNavBar, FormFragment.MainActivityNavBar, TicketFragment.MainActivityNavBar, SuccessFragment.MainActivityNavBar {
 
 
     private AppBarConfiguration appBarConfiguration;
     private NavController navController;
     private ViewModelMain viewModel;
+    private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(this.navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController,appBarConfiguration);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavBar);
+        bottomNavigationView = findViewById(R.id.bottomNavBar);
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
     }
 
@@ -63,5 +64,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void hideNavBar() {
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showNavBar() {
+        bottomNavigationView.setVisibility(View.VISIBLE);
     }
 }
