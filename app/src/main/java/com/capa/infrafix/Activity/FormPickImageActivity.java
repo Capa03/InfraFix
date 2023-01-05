@@ -24,7 +24,7 @@ import com.capa.infrafix.R;
 import java.io.IOException;
 
 public class FormPickImageActivity extends AppCompatActivity {
-    private ImageView mImageView;
+
     private ViewModelPickImage viewModel;
 
     public static void startActivity(Context context) {
@@ -37,7 +37,7 @@ public class FormPickImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.viewModel = new ViewModelProvider(this).get(ViewModelPickImage.class);
-        this.mImageView = findViewById(R.id.imageViewCapturedToSend);
+
         setContentView(R.layout.activity_form_pick_image);
 
         this.viewModel.setupPermissions(this);

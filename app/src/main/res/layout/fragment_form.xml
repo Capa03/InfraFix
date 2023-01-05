@@ -62,27 +62,27 @@
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:minHeight="48dp"
             android:text="Camera"
             app:icon="@drawable/ic_baseline_camera_alt_24"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButtonGallary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewCapturedToSend"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonGallary"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
             android:id="@+id/imageButtonGallary"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewCapturedToSend"
-            app:icon="@drawable/gallery"
             android:text="Gallery"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            app:icon="@drawable/gallery"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewImageForm"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.gms.maps.MapView
@@ -114,15 +114,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
-        <ImageView
-            android:id="@+id/imageViewCapturedToSend"
-            android:layout_width="288dp"
-            android:layout_height="184dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewImageForm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
-
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

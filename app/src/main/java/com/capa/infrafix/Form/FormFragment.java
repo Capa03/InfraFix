@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -22,6 +21,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.capa.infrafix.Activity.FormCaptureImageActivity;
 import com.capa.infrafix.Activity.FormPickImageActivity;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,16 +46,15 @@ public class FormFragment extends Fragment {
 
     private GoogleMap mMap;
     private MapView mapView;
-    private View view;
     private ViewModelForm viewModelForm;
-    private ImageView imageView;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"};
     private Button send;
     private EditText description, date, ticketTitle;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private List<Address> addresses;
     private MainActivityNavBar mainActivityNavBar;
-
+    private FormAdapter adapter;
+    private List<BitmapImage> bitmapImage = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,11 +117,17 @@ public class FormFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
         this.cacheViews(view);
-        this.view = view;
         if (!this.viewModelForm.isLocationPermissionGranted()) {
             this.viewModelForm.requestPermission(getActivity());
         }
 
+
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewImageForm);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(layoutManager);
+        this.adapter = new FormAdapter(this.bitmapImage);
+        recyclerView.setAdapter(adapter);
 
         Button openCamera = view.findViewById(R.id.imageButtonCamera);
         openCamera.setOnClickListener(view1 -> {
@@ -174,7 +181,6 @@ public class FormFragment extends Fragment {
                     this.description.setText("");
                     this.date.setText("");
                     this.ticketTitle.setText("");
-                    this.imageView.setImageResource(android.R.color.transparent);
 
                     NavDirections action = FormFragmentDirections.actionFormFragmentToSuccessFragment();
                     Navigation.findNavController(view).navigate(action);
@@ -199,7 +205,6 @@ public class FormFragment extends Fragment {
 
     public interface MainActivityNavBar {
         void hideNavBar();
-
         void showNavBar();
     }
 
@@ -208,12 +213,14 @@ public class FormFragment extends Fragment {
     public void onStart() {
         super.onStart();
         this.mapView.onStart();
-        this.imageView.setVisibility(View.GONE);
+       // this.imageView.setVisibility(View.GONE);
 
-        if (Dummy.getInstance().getBitmap() != null) {
-            this.imageView.setVisibility(View.VISIBLE);
-            imageView.setImageBitmap(Dummy.getInstance().getBitmap());
+       if (Dummy.getInstance().getBitmap() != null) {
+           // this.imageView.setVisibility(View.VISIBLE);
+           // imageView.setImageBitmap(Dummy.getInstance().getBitmap());
+           bitmapImage.add(new BitmapImage(Dummy.getInstance().getBitmap()));
         }
+        this.adapter.updateList(bitmapImage);
     }
 
 
@@ -248,7 +255,7 @@ public class FormFragment extends Fragment {
     }
 
     private void cacheViews(View view) {
-        this.imageView = view.findViewById(R.id.imageViewCapturedToSend);
+        //this.imageView = view.findViewById(R.id.imageViewCapturedToSend);
         this.description = view.findViewById(R.id.editTextDescription);
         this.date = view.findViewById(R.id.editTextDate);
         this.send = view.findViewById(R.id.buttonSend);
