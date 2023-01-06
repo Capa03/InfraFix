@@ -12,8 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.capa.infrafix.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     @NonNull
     @Override
     public TicketAdapter.TicketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ticket,parent,false);
         return new TicketViewHolder(view);
     }
@@ -37,7 +40,14 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     @Override
     public void onBindViewHolder(@NonNull TicketAdapter.TicketViewHolder holder, int position) {
         Ticket ticket = this.ticketList.get(position);
-        holder.setImageView(ticket.getPictureTicket());
+        if(ticket.getPictureTicket().size() > 0) {
+            String imageFileName = ticket.getPictureTicket().get(0);
+            File file = new File(holder.root.getContext().getApplicationContext().getFilesDir(), imageFileName);
+            Glide.with(holder.root.getContext()).load(file).into(holder.imageView);
+        }
+
+
+
         holder.textView.setText(ticket.getSubject());
         holder.root.setOnClickListener(view -> {
             listener.onTicketClicked(position, ticket);
@@ -85,9 +95,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
         }
 
-        public void setTextView(String text){
-            this.textView.setText(text);
-        }
     }
 
     public interface TicketAdapterListener{

@@ -2,6 +2,11 @@ package com.capa.infrafix.Ticket;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 public class Ticket {
@@ -11,12 +16,12 @@ public class Ticket {
     private String subject;
     private String description;
     private String date;
-    private String pictureTicket;
+    private List<String> pictureTicket;
     private double lat;
     private double lng;
 
 
-    public Ticket(long ticketId, String subject, String description, String date, String pictureTicket, double lat, double lng) {
+    public Ticket(long ticketId, String subject, String description, String date, List<String> pictureTicket, double lat, double lng) {
         this.ticketId = ticketId;
         this.subject = subject;
         this.description = description;
@@ -56,11 +61,11 @@ public class Ticket {
         this.date = date;
     }
 
-    public String getPictureTicket() {
+    public List<String> getPictureTicket() {
         return pictureTicket;
     }
 
-    public void setPictureTicket(String pictureTicket) {
+    public void setPictureTicket(List<String> pictureTicket) {
         this.pictureTicket = pictureTicket;
     }
 

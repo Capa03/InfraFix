@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class ViewModelMain extends AndroidViewModel {
 
@@ -38,5 +40,16 @@ public class ViewModelMain extends AndroidViewModel {
         String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(activity, permissions, 101);
+    }
+
+
+    private MutableLiveData<String> reportImagesLiveData = new MutableLiveData<>();
+
+    public void reportImage(String newImage) {
+        reportImagesLiveData.postValue(newImage);
+    }
+
+    public LiveData<String> getImages() {
+        return reportImagesLiveData;
     }
 }

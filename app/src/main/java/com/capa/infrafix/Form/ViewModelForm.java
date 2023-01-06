@@ -18,6 +18,8 @@ import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewModelForm extends AndroidViewModel {
 
@@ -25,7 +27,7 @@ public class ViewModelForm extends AndroidViewModel {
     private final int LOCATION_PERMISSION_CODE = 101;
     private Context context;
     private TicketDAO ticketDAO;
-
+    private List<String> imageFileNames = new ArrayList<>();
     public ViewModelForm(@NonNull Application application) {
         super(application);
         this.context = application.getApplicationContext();
@@ -47,18 +49,16 @@ public class ViewModelForm extends AndroidViewModel {
     }
 
     public boolean createTicket(Ticket ticket) {
-        new Thread(() -> ticketDAO.createTicket(new Ticket(0, ticket.getSubject(), ticket.getDescription(), ticket.getDate(), ticket.getPictureTicket(), ticket.getLat(), ticket.getLng()))).start();
+        new Thread(() -> {
+            try {
+                ticketDAO.createTicket(ticket);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
         return true;
     }
 
-
-    public String BitmapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] bytes = baos.toByteArray();
-        String temp = Base64.encodeToString(bytes, Base64.DEFAULT);
-        return temp;
-    }
 
     public boolean isLocationPermissionGranted(){
 
@@ -76,6 +76,13 @@ public class ViewModelForm extends AndroidViewModel {
         }
     }
 
+    public List<String> getImageFileNames() {
+        return imageFileNames;
+    }
+
+    public void setImageFileNames(List<String> imageFileNames) {
+        this.imageFileNames = imageFileNames;
+    }
 }
 
 

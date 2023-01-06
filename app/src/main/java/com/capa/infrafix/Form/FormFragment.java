@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -24,9 +25,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capa.infrafix.Activity.FormCaptureImageActivity;
-import com.capa.infrafix.Activity.FormPickImageActivity;
-import com.capa.infrafix.Dummy;
+import com.capa.infrafix.Activity.MainActivity;
+import com.capa.infrafix.Activity.ViewModelMain;
+
 import com.capa.infrafix.R;
 import com.capa.infrafix.Ticket.Ticket;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -44,6 +45,8 @@ import java.util.Locale;
 
 public class FormFragment extends Fragment {
 
+    private ViewModelMain viewModelMain;
+
     private GoogleMap mMap;
     private MapView mapView;
     private ViewModelForm viewModelForm;
@@ -54,7 +57,9 @@ public class FormFragment extends Fragment {
     private List<Address> addresses;
     private MainActivityNavBar mainActivityNavBar;
     private FormAdapter adapter;
-    private List<BitmapImage> bitmapImage = new ArrayList<>();
+    private List<String> imageFileNames = new ArrayList<>();
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,27 +121,43 @@ public class FormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
+
         this.cacheViews(view);
         if (!this.viewModelForm.isLocationPermissionGranted()) {
             this.viewModelForm.requestPermission(getActivity());
         }
 
+        this.viewModelMain = new ViewModelProvider(requireActivity()).get(ViewModelMain.class);
 
+        this.viewModelMain.getImages().observe(getViewLifecycleOwner(), imageFileName -> {
+            // Store imageFileName
+            boolean found = false;
+            for(String imageName : imageFileNames){
+                if(imageName.equals(imageFileName)){
+                    found = true;
+                }
+            }
+            if(!found){
+                imageFileNames.add(imageFileName);
+                adapter.updateList(imageFileNames);
+            }
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewImageForm);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
-        this.adapter = new FormAdapter(this.bitmapImage);
+        this.adapter = new FormAdapter();
         recyclerView.setAdapter(adapter);
+
 
         Button openCamera = view.findViewById(R.id.imageButtonCamera);
         openCamera.setOnClickListener(view1 -> {
-            FormCaptureImageActivity.startActivity(getContext());
+            ((MainActivity) getActivity()).captureImage();
         });
 
         Button openGallery = view.findViewById(R.id.imageButtonGallary);
         openGallery.setOnClickListener(view13 -> {
-            FormPickImageActivity.startActivity(getContext());
+            ((MainActivity) getActivity()).pickImage();
         });
 
         send.setOnClickListener(view12 -> {
@@ -144,37 +165,34 @@ public class FormFragment extends Fragment {
             String titleTicket = getResources().getString(R.string.TitleEmpty);
             String dateTicket = getResources().getString(R.string.DateEmpty);
             String descriptionTicket = getResources().getString(R.string.DescriptionEmpty);
-            String bitmap = "";
             String descriptionValue = this.description.getText().toString();
             String dateValue = this.date.getText().toString();
             String titleValue = this.ticketTitle.getText().toString();
 
-            if (Dummy.getInstance().getBitmap() != null) {
-                bitmap = this.viewModelForm.BitmapToString(Dummy.getInstance().getBitmap());
-            }
 
-            if(descriptionValue.isEmpty()){
+            if (descriptionValue.isEmpty()) {
                 this.description.setError(descriptionTicket);
                 somethingWrong = true;
             }
-            if(dateValue.isEmpty()){
+            if (dateValue.isEmpty()) {
                 this.date.setError(dateTicket);
                 somethingWrong = true;
             }
-            if(titleValue.isEmpty()){
+
+            if (titleValue.isEmpty()) {
                 this.ticketTitle.setError(titleTicket);
                 somethingWrong = true;
             }
 
-            if(Dummy.getInstance().getBitmap() == null){
-                Toast.makeText(getContext(),R.string.ImageEmpty,Toast.LENGTH_SHORT).show();
+            if (adapter.getItemCount() <= 0) {
+                Toast.makeText(getContext(), R.string.ImageEmpty, Toast.LENGTH_SHORT).show();
                 somethingWrong = true;
             }
 
-            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, bitmap, this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
-            if(!somethingWrong) {
+            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, imageFileNames, this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
+            if (!somethingWrong) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(R.string.do_you_want_leave_us);
+                builder.setTitle(R.string.send);
 
                 builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                     this.viewModelForm.createTicket(ticket);
@@ -213,14 +231,7 @@ public class FormFragment extends Fragment {
     public void onStart() {
         super.onStart();
         this.mapView.onStart();
-       // this.imageView.setVisibility(View.GONE);
 
-       if (Dummy.getInstance().getBitmap() != null) {
-           // this.imageView.setVisibility(View.VISIBLE);
-           // imageView.setImageBitmap(Dummy.getInstance().getBitmap());
-           bitmapImage.add(new BitmapImage(Dummy.getInstance().getBitmap()));
-        }
-        this.adapter.updateList(bitmapImage);
     }
 
 
@@ -255,10 +266,10 @@ public class FormFragment extends Fragment {
     }
 
     private void cacheViews(View view) {
-        //this.imageView = view.findViewById(R.id.imageViewCapturedToSend);
         this.description = view.findViewById(R.id.editTextDescription);
         this.date = view.findViewById(R.id.editTextDate);
         this.send = view.findViewById(R.id.buttonSend);
         this.ticketTitle = view.findViewById(R.id.editTextTitle);
+
     }
 }

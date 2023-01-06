@@ -20,6 +20,7 @@ public interface TicketDAO {
     @Query("SELECT * FROM Ticket WHERE ticketId = :id")
     LiveData<Ticket> getTicket(int id);
 
+
     @Insert
     void createTicket(Ticket ticket);
 

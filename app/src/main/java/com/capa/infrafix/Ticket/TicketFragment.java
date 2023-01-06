@@ -78,14 +78,15 @@ public class TicketFragment extends Fragment {
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
-
             }
         });
 
         recyclerView.setAdapter(this.adapter);
+
         this.viewModelTicket.getTickets().observe(getViewLifecycleOwner(), tickets -> {
             this.adapter.updateList(tickets);
         });
+
         this.mainActivityNavBar.showNavBar();
     }
 

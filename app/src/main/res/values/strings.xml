@@ -25,4 +25,5 @@
     <string name="DescriptionEmpty">Description Can not be Empty</string>
     <string name="DateEmpty">Date Can not be Empty</string>
     <string name="ImageEmpty">Image Can not be Empty</string>
+    <string name="send">Do you will Continue?</string>
 </resources>

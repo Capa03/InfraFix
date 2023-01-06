@@ -1,58 +1,102 @@
 package com.capa.infrafix.Form;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.capa.infrafix.R;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FormAdapter extends RecyclerView.Adapter<FormAdapter.FormViewHolder> {
-    private List<BitmapImage> bitmaps;
 
-    public FormAdapter(List<BitmapImage> bitmap){
-        this.bitmaps = bitmap;
+    private List<String> images;
+
+    private boolean trashState = false;
+
+    public FormAdapter() {
+        images = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public FormAdapter.FormViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_row_from,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_row_delete, parent, false);
         return new FormViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FormAdapter.FormViewHolder holder, int position) {
-        BitmapImage bitmapImage = this.bitmaps.get(position);
-        holder.setImageView(bitmapImage.getBitmap());
+    public void onBindViewHolder(@NonNull FormAdapter.FormViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        String imageFileName = this.images.get(position);
+        File file = new File(holder.view.getContext().getApplicationContext().getFilesDir(), imageFileName);
+        Glide.with(holder.view.getContext()).load(file).into(holder.imageView);
+
+        holder.view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                setTrashState(!getTrashState());
+                return false;
+            }
+        });
+
+        holder.trash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                images.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+        if(!trashState){
+            holder.trash.setVisibility(View.GONE);
+        }else{
+            holder.trash.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public boolean getTrashState() {
+        return trashState;
+    }
+
+    public void setTrashState(boolean trashState) {
+        this.trashState = trashState;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-
-        return this.bitmaps.size();
+        return this.images.size();
     }
 
-    public void updateList(List<BitmapImage> bitmaps){
-        this.bitmaps = bitmaps;
+    public void updateList(List<String> imageNames) {
+        this.images = imageNames;
         notifyDataSetChanged();
     }
 
-    public class FormViewHolder extends RecyclerView.ViewHolder{
+    public class FormViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
-
+        private ImageButton trash;
+        private View view;
 
         public FormViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.imageView = itemView.findViewById(R.id.imageRowFrom);
+            this.view = itemView;
+            this.imageView = itemView.findViewById(R.id.imageRowFromDelete);
+            this.trash = itemView.findViewById(R.id.imageButtonDeleteImage);
+
         }
 
-        public void setImageView(Bitmap bitmap){
-            this.imageView.setImageBitmap(bitmap);
-        }
     }
+
 }

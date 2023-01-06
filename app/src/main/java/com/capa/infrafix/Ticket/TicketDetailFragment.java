@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -15,6 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.capa.infrafix.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,13 +29,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class TicketDetailFragment extends Fragment implements OnMapReadyCallback {
 
-    private ImageView imageView;
+
     private TextView title, date, description;
     private MapView mapView;
     private ViewModelTicket viewModel;
     private TicketDetailFragmentArgs args;
     private MainActivityNavBar mainActivityNavBar;
     private View view;
+    private TicketDetailAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +67,7 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.cacheViews(view);
-        this.viewModel = new ViewModelProvider(this).get(ViewModelTicket.class);
+        this.viewModel = new ViewModelProvider(this).get(ViewModelTicket.class);;
         this.args = TicketDetailFragmentArgs.fromBundle(getArguments());
         this.view = view;
 
@@ -72,13 +76,20 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
         String descriptionTicket = getResources().getString(R.string.description);
 
         this.viewModel.getTicketById(args.getTicketId()).observe(getViewLifecycleOwner(), ticket -> {
-            this.imageView.setImageBitmap(this.viewModel.StringToBitmap(ticket.getPictureTicket()));
             this.title.setText(titleTicket + " : "+ ticket.getSubject());
             this.date.setText(dateTicket + " : "+ ticket.getDate());
             this.description.setText(descriptionTicket + " : "+ ticket.getDescription());
+            this.adapter.updateList(ticket.getPictureTicket());
         });
 
         this.mainActivityNavBar.hideNavBar();
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTicketDetail);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        this.adapter = new TicketDetailAdapter();
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(this.adapter);
+
     }
 
 
@@ -135,7 +146,6 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void cacheViews(View view) {
-        this.imageView = view.findViewById(R.id.imageViewTicketDetails);
         this.title = view.findViewById(R.id.textViewTicketDetailsTitle);
         this.date = view.findViewById(R.id.textViewTicketDetailsDate);
         this.description = view.findViewById(R.id.textViewTicketDetailsDescription);

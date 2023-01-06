@@ -13,15 +13,6 @@
         tools:context=".Ticket.TicketFragment">
 
 
-        <ImageView
-            android:id="@+id/imageViewTicketDetails"
-            android:layout_width="280dp"
-            android:layout_height="200dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
-
         <TextView
             android:id="@+id/textViewTicketDetailsTitle"
             android:layout_width="wrap_content"
@@ -29,7 +20,7 @@
             android:layout_marginTop="32dp"
             android:text="Title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewTicketDetails" />
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewTicketDetail" />
 
         <TextView
             android:id="@+id/textViewTicketDetailsDescription"
@@ -58,6 +49,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewTicketDetailsDescription" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTicketDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
