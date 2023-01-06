@@ -80,8 +80,8 @@ public class ViewModelForm extends AndroidViewModel {
         return imageFileNames;
     }
 
-    public void setImageFileNames(List<String> imageFileNames) {
-        this.imageFileNames = imageFileNames;
+    public void addImageFileName(String fileName){
+        imageFileNames.add(fileName);
     }
 }
 

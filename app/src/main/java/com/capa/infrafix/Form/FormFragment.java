@@ -57,7 +57,7 @@ public class FormFragment extends Fragment {
     private List<Address> addresses;
     private MainActivityNavBar mainActivityNavBar;
     private FormAdapter adapter;
-    private List<String> imageFileNames = new ArrayList<>();
+
 
 
     @Override
@@ -132,15 +132,16 @@ public class FormFragment extends Fragment {
         this.viewModelMain.getImages().observe(getViewLifecycleOwner(), imageFileName -> {
             // Store imageFileName
             boolean found = false;
-            for(String imageName : imageFileNames){
-                if(imageName.equals(imageFileName)){
+            for(String imageName : this.viewModelForm.getImageFileNames()){
+                if (imageName.equals(imageFileName)) {
                     found = true;
+                    break;
                 }
             }
             if(!found){
-                imageFileNames.add(imageFileName);
-                adapter.updateList(imageFileNames);
+                this.viewModelForm.addImageFileName(imageFileName);
             }
+            adapter.updateList(this.viewModelForm.getImageFileNames());
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewImageForm);
@@ -189,7 +190,7 @@ public class FormFragment extends Fragment {
                 somethingWrong = true;
             }
 
-            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, imageFileNames, this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
+            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, this.viewModelForm.getImageFileNames(), this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
             if (!somethingWrong) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.send);
@@ -212,6 +213,8 @@ public class FormFragment extends Fragment {
 
         this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         this.mainActivityNavBar.showNavBar();
+
+
     }
 
     @Override
