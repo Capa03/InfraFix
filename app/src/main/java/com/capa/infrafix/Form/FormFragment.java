@@ -1,6 +1,7 @@
 package com.capa.infrafix.Form;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -40,7 +42,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,7 +63,7 @@ public class FormFragment extends Fragment {
     private MainActivityNavBar mainActivityNavBar;
     private FormAdapter adapter;
     private List<Ticket> ticketLists = new ArrayList<>();
-
+    private Calendar calendar = Calendar.getInstance();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,6 +180,18 @@ public class FormFragment extends Fragment {
             ((MainActivity) getActivity()).pickImage();
         });
 
+
+        DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
+            calendar.set(Calendar.YEAR,year);
+            calendar.set(Calendar.MONTH,month);
+            calendar.set(Calendar.DAY_OF_MONTH,day);
+            updateCalendar();
+        };
+
+        date.setOnClickListener(view14 -> new DatePickerDialog(getActivity(),dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show());
+        
         send.setOnClickListener(view12 -> {
             Boolean somethingWrong = false;
             String titleTicket = getResources().getString(R.string.TitleEmpty);
@@ -184,7 +200,6 @@ public class FormFragment extends Fragment {
             String descriptionValue = this.description.getText().toString();
             String dateValue = this.date.getText().toString();
             String titleValue = this.ticketTitle.getText().toString();
-
 
             if (descriptionValue.isEmpty()) {
                 this.description.setError(descriptionTicket);
@@ -234,6 +249,12 @@ public class FormFragment extends Fragment {
         this.mainActivityNavBar.showNavBar();
 
 
+    }
+
+    private void updateCalendar(){
+        String format = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(format,Locale.ENGLISH);
+        date.setText(sdf.format(calendar.getTime()));
     }
 
     @Override
