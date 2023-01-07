@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -57,8 +58,7 @@ public class FormFragment extends Fragment {
     private List<Address> addresses;
     private MainActivityNavBar mainActivityNavBar;
     private FormAdapter adapter;
-
-
+    private List<Ticket> ticketLists = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,14 +100,29 @@ public class FormFragment extends Fragment {
                     fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
                         if (location != null) {
                             Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                            try {
-                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                LatLng loc = new LatLng(this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
-                                mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+
+
+                            this.viewModelForm.getTickets().observe(getViewLifecycleOwner(), new Observer<List<Ticket>>() {
+                                LatLng loc;
+
+                                @Override
+                                public void onChanged(List<Ticket> ticketList) {
+                                    ticketLists = ticketList;
+                                    try {
+                                        addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 100);
+                                        if (ticketList.size() > 0) {
+                                            loc = new LatLng(addresses.get(ticketList.size()).getLatitude(), addresses.get(ticketList.size()).getLongitude());
+                                        } else {
+                                            loc = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                                }
+                            });
+
                         }
                     });
                 }
@@ -132,13 +147,13 @@ public class FormFragment extends Fragment {
         this.viewModelMain.getImages().observe(getViewLifecycleOwner(), imageFileName -> {
             // Store imageFileName
             boolean found = false;
-            for(String imageName : this.viewModelForm.getImageFileNames()){
+            for (String imageName : this.viewModelForm.getImageFileNames()) {
                 if (imageName.equals(imageFileName)) {
                     found = true;
                     break;
                 }
             }
-            if(!found){
+            if (!found) {
                 this.viewModelForm.addImageFileName(imageFileName);
             }
             adapter.updateList(this.viewModelForm.getImageFileNames());
@@ -190,7 +205,11 @@ public class FormFragment extends Fragment {
                 somethingWrong = true;
             }
 
-            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue, this.viewModelForm.getImageFileNames(), this.addresses.get(0).getLatitude(), this.addresses.get(0).getLongitude());
+            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
+                    this.viewModelForm.getImageFileNames(),
+                    this.addresses.get(ticketLists.size()).getLatitude(),
+                    this.addresses.get(ticketLists.size()).getLongitude());
+
             if (!somethingWrong) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.send);

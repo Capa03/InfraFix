@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.capa.infrafix.Ticket.Ticket;
 import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
+import com.capa.infrafix.repository.TicketRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -28,25 +30,18 @@ public class ViewModelForm extends AndroidViewModel {
     private Context context;
     private TicketDAO ticketDAO;
     private List<String> imageFileNames = new ArrayList<>();
+    private TicketRepository ticketRepository;
     public ViewModelForm(@NonNull Application application) {
         super(application);
         this.context = application.getApplicationContext();
         this.ticketDAO = AppDatabase.getInstance(application.getApplicationContext()).getTicketDAO();
+        this.ticketRepository = new TicketRepository(application.getApplicationContext());
     }
 
-
-
-    public void setupPermissions(Activity activity) {
-        int permission = ContextCompat.checkSelfPermission(this.context, Manifest.permission.CAMERA);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            makeRequest(activity);
-        }
+    public LiveData<List<Ticket>> getTickets(){
+        return this.ticketRepository.getTicketList();
     }
 
-    public void makeRequest(Activity activity) {
-        String[] permissions = new String[]{Manifest.permission.CAMERA};
-        ActivityCompat.requestPermissions(activity, permissions, 101);
-    }
 
     public boolean createTicket(Ticket ticket) {
         new Thread(() -> {
