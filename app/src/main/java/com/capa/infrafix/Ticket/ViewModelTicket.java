@@ -36,8 +36,13 @@ public class ViewModelTicket extends AndroidViewModel {
         this.ticketRepository.refreshTicket();
     }
 
+
     public void deleteTicket(Ticket ticket){
         new Thread(() -> ticketDAO.deleteTicket(ticket)).start();
+    }
+
+    public void deleteTicketApi(int ticket){
+        this.ticketRepository.deleteTicket(ticket);
     }
 
 }

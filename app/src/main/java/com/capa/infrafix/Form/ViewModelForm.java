@@ -17,6 +17,7 @@ import androidx.lifecycle.LiveData;
 import com.capa.infrafix.Ticket.Ticket;
 import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
+import com.capa.infrafix.model.TicketOutDTO;
 import com.capa.infrafix.repository.TicketRepository;
 
 import java.io.ByteArrayOutputStream;
@@ -53,6 +54,11 @@ public class ViewModelForm extends AndroidViewModel {
         }).start();
         return true;
     }
+
+    public void createTicketApi(Ticket ticket){
+        this.ticketRepository.createTicketApi(ticket);
+    }
+
 
 
     public boolean isLocationPermissionGranted(){

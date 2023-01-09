@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 public class Ticket {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     private long ticketId;
     private String subject;
     private String description;
@@ -31,7 +31,9 @@ public class Ticket {
         this.lng = lng;
     }
 
-
+    public void setTicketId(long ticketId) {
+        this.ticketId = ticketId;
+    }
 
     public long getTicketId() {
         return ticketId;

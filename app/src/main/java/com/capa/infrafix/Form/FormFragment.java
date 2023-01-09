@@ -11,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -21,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -30,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capa.infrafix.Activity.MainActivity;
 import com.capa.infrafix.Activity.ViewModelMain;
-
 import com.capa.infrafix.R;
 import com.capa.infrafix.Ticket.Ticket;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,14 +39,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 public class FormFragment extends Fragment {
-
-    private ViewModelMain viewModelMain;
 
     private GoogleMap mMap;
     private MapView mapView;
@@ -62,8 +55,8 @@ public class FormFragment extends Fragment {
     private List<Address> addresses;
     private MainActivityNavBar mainActivityNavBar;
     private FormAdapter adapter;
-    private List<Ticket> ticketLists = new ArrayList<>();
-    private Calendar calendar = Calendar.getInstance();
+    private final Calendar calendar = Calendar.getInstance();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +68,7 @@ public class FormFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.do_you_want_leave_us);
 
-                builder.setPositiveButton(R.string.yes, (dialog, which) -> getActivity().finish());
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> requireActivity().finish());
                 builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -98,34 +91,24 @@ public class FormFragment extends Fragment {
 
 
             for (String permission : REQUIRED_PERMISSIONS) {
-                if (ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
                     mMap.setMyLocationEnabled(true);
                     //Get location
                     fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
                         if (location != null) {
                             Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
+                            LatLng loc;
 
-                            this.viewModelForm.getTickets().observe(getViewLifecycleOwner(), new Observer<List<Ticket>>() {
-                                LatLng loc;
+                            try {
+                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 100);
+                                loc = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+                                mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-                                @Override
-                                public void onChanged(List<Ticket> ticketList) {
-                                    ticketLists = ticketList;
-                                    try {
-                                        addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 100);
-                                        if (ticketList.size() > 0) {
-                                            loc = new LatLng(addresses.get(ticketList.size()).getLatitude(), addresses.get(ticketList.size()).getLongitude());
-                                        } else {
-                                            loc = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-                                }
-                            });
 
                         }
                     });
@@ -146,9 +129,9 @@ public class FormFragment extends Fragment {
             this.viewModelForm.requestPermission(getActivity());
         }
 
-        this.viewModelMain = new ViewModelProvider(requireActivity()).get(ViewModelMain.class);
+        ViewModelMain viewModelMain = new ViewModelProvider(requireActivity()).get(ViewModelMain.class);
 
-        this.viewModelMain.getImages().observe(getViewLifecycleOwner(), imageFileName -> {
+        viewModelMain.getImages().observe(getViewLifecycleOwner(), imageFileName -> {
             // Store imageFileName
             boolean found = false;
             for (String imageName : this.viewModelForm.getImageFileNames()) {
@@ -171,29 +154,25 @@ public class FormFragment extends Fragment {
 
 
         Button openCamera = view.findViewById(R.id.imageButtonCamera);
-        openCamera.setOnClickListener(view1 -> {
-            ((MainActivity) getActivity()).captureImage();
-        });
+        openCamera.setOnClickListener(view1 -> ((MainActivity) requireActivity()).captureImage());
 
         Button openGallery = view.findViewById(R.id.imageButtonGallary);
-        openGallery.setOnClickListener(view13 -> {
-            ((MainActivity) getActivity()).pickImage();
-        });
+        openGallery.setOnClickListener(view13 -> ((MainActivity) requireActivity()).pickImage());
 
 
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
-            calendar.set(Calendar.YEAR,year);
-            calendar.set(Calendar.MONTH,month);
-            calendar.set(Calendar.DAY_OF_MONTH,day);
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
             updateCalendar();
         };
 
-        date.setOnClickListener(view14 -> new DatePickerDialog(getActivity(),dateSetListener,
+        date.setOnClickListener(view14 -> new DatePickerDialog(getActivity(), dateSetListener,
                 calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show());
-        
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
+
         send.setOnClickListener(view12 -> {
-            Boolean somethingWrong = false;
+            boolean somethingWrong = false;
             String titleTicket = getResources().getString(R.string.TitleEmpty);
             String dateTicket = getResources().getString(R.string.DateEmpty);
             String descriptionTicket = getResources().getString(R.string.DescriptionEmpty);
@@ -222,8 +201,8 @@ public class FormFragment extends Fragment {
 
             Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
                     this.viewModelForm.getImageFileNames(),
-                    this.addresses.get(ticketLists.size()).getLatitude(),
-                    this.addresses.get(ticketLists.size()).getLongitude());
+                    this.addresses.get(0).getLatitude(),
+                    this.addresses.get(0).getLongitude());
 
             if (!somethingWrong) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -231,6 +210,12 @@ public class FormFragment extends Fragment {
 
                 builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                     this.viewModelForm.createTicket(ticket);
+
+                    try {
+                        this.viewModelForm.createTicketApi(ticket);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     this.description.setText("");
                     this.date.setText("");
                     this.ticketTitle.setText("");
@@ -245,15 +230,15 @@ public class FormFragment extends Fragment {
             }
         });
 
-        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         this.mainActivityNavBar.showNavBar();
 
 
     }
 
-    private void updateCalendar(){
+    private void updateCalendar() {
         String format = "MM/dd/yy";
-        SimpleDateFormat sdf = new SimpleDateFormat(format,Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
         date.setText(sdf.format(calendar.getTime()));
     }
 
@@ -266,6 +251,7 @@ public class FormFragment extends Fragment {
 
     public interface MainActivityNavBar {
         void hideNavBar();
+
         void showNavBar();
     }
 

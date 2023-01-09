@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.capa.infrafix.Ticket.Ticket;
 import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
+import com.capa.infrafix.model.TicketOutDTO;
 import com.capa.infrafix.remote.TicketService;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TicketRepository {
 
     private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.example.com/")
+            .baseUrl("http://192.168.1.70:5011/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
@@ -31,32 +32,71 @@ public class TicketRepository {
     private TicketDAO ticketDAO;
     private TicketService ticketService;
 
-    public TicketRepository(Context context){
+    public TicketRepository(Context context) {
         this.ticketDAO = AppDatabase.getInstance(context).getTicketDAO();
         this.ticketService = retrofit.create(TicketService.class);
     }
 
-    public LiveData<List<Ticket>> getTicketList(){
+    public LiveData<List<Ticket>> getTicketList() {
         return this.ticketDAO.getAllTicket();
     }
 
-    public LiveData<Ticket> getTicketById(int ticketID){
+    public LiveData<Ticket> getTicketById(int ticketID) {
         return this.ticketDAO.getTicket(ticketID);
     }
 
+    public void createTicketApi(Ticket ticket) {
+        TicketOutDTO ticketOut = new TicketOutDTO(ticket.getSubject(),ticket.getDescription()
+                ,ticket.getDate(),ticket.getPictureTicket(),ticket.getLat(),ticket.getLng());
+        this.ticketService.createTicket(ticketOut).enqueue(new Callback<Ticket>() {
+            @Override
+            public void onResponse(Call<Ticket> call, Response<Ticket> response) {
+                if (response.isSuccessful()) {
+                    executor.execute(() -> ticketDAO.createTicket(response.body()));
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Ticket> call, Throwable t) {
+                t.printStackTrace();
+                System.out.print(t.getMessage());
+            }
+        });
+    }
 
-    public void refreshTicket(){
+    public void refreshTicket() {
         this.ticketService.getTicketList().enqueue(new Callback<List<Ticket>>() {
             @Override
             public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                 if (response.isSuccessful()) {
-                    executor.execute(() -> ticketDAO.createTickets(response.body()));
+                    executor.execute(() -> {
+                        ticketDAO.clearTable();
+                        ticketDAO.createTickets(response.body());
+                        //ticketDAO.createTicket(response.body().get(response.body().size() - 1));
+
+                    });
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteTicket(int ticketId) {
+        this.ticketService.deleteTicket(ticketId).enqueue(new Callback<Ticket>() {
+            @Override
+            public void onResponse(Call<Ticket> call, Response<Ticket> response) {
+                if (response.isSuccessful()) {
+                    executor.execute(() -> ticketDAO.deleteTicket(response.body()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Ticket> call, Throwable t) {
                 t.printStackTrace();
             }
         });

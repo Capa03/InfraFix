@@ -28,6 +28,7 @@ public class TicketFragment extends Fragment {
     private NavController navController;
     private MainActivityNavBar mainActivityNavBar;
     private View view;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class TicketFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_ticket, container, false);
-        navController = NavHostFragment.findNavController(TicketFragment.this);
+        this.navController = NavHostFragment.findNavController(TicketFragment.this);
         return root;
     }
 
@@ -73,7 +74,10 @@ public class TicketFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.delete);
 
-                builder.setPositiveButton(R.string.yes, (dialog, which) -> viewModelTicket.deleteTicket(ticket));
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                    viewModelTicket.deleteTicket(ticket);
+                    viewModelTicket.deleteTicketApi((int) ticket.getTicketId());
+                });
                 builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -105,6 +109,7 @@ public class TicketFragment extends Fragment {
 
     public interface MainActivityNavBar {
         void hideNavBar();
+
         void showNavBar();
     }
 }

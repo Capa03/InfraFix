@@ -20,6 +20,8 @@ public interface TicketDAO {
     @Query("SELECT * FROM Ticket WHERE ticketId = :id")
     LiveData<Ticket> getTicket(int id);
 
+    @Query("DELETE FROM Ticket")
+    void clearTable();
 
     @Insert
     void createTicket(Ticket ticket);
