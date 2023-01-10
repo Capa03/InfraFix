@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TicketRepository {
 
     private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.70:5011/api/")
+            .baseUrl("http://10.0.2.2:5011/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
@@ -46,8 +46,8 @@ public class TicketRepository {
     }
 
     public void createTicketApi(Ticket ticket) {
-        TicketOutDTO ticketOut = new TicketOutDTO(ticket.getSubject(),ticket.getDescription()
-                ,ticket.getDate(),ticket.getPictureTicket(),ticket.getLat(),ticket.getLng());
+        TicketOutDTO ticketOut = new TicketOutDTO(ticket.getSubject(), ticket.getDescription()
+                , ticket.getDate(), ticket.getPictureTicket(), ticket.getLat(), ticket.getLng());
         this.ticketService.createTicket(ticketOut).enqueue(new Callback<Ticket>() {
             @Override
             public void onResponse(Call<Ticket> call, Response<Ticket> response) {
@@ -70,10 +70,11 @@ public class TicketRepository {
             public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                 if (response.isSuccessful()) {
                     executor.execute(() -> {
-                        ticketDAO.clearTable();
-                        ticketDAO.createTickets(response.body());
-                        //ticketDAO.createTicket(response.body().get(response.body().size() - 1));
 
+                        ticketDAO.clearTable();
+                        for(Ticket ticket : response.body()){
+                            ticketDAO.createTicket(ticket);
+                        }
                     });
 
                 }

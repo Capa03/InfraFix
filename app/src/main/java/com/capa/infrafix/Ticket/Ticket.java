@@ -12,7 +12,7 @@ import java.util.List;
 public class Ticket {
 
     @PrimaryKey(autoGenerate = false)
-    private long ticketId;
+    private int id;
     private String subject;
     private String description;
     private String date;
@@ -20,9 +20,12 @@ public class Ticket {
     private double lat;
     private double lng;
 
+    public int getId() {
+        return id;
+    }
 
-    public Ticket(long ticketId, String subject, String description, String date, List<String> pictureTicket, double lat, double lng) {
-        this.ticketId = ticketId;
+    public Ticket(int id, String subject, String description, String date, List<String> pictureTicket, double lat, double lng) {
+        this.id = id;
         this.subject = subject;
         this.description = description;
         this.date = date;
@@ -31,13 +34,7 @@ public class Ticket {
         this.lng = lng;
     }
 
-    public void setTicketId(long ticketId) {
-        this.ticketId = ticketId;
-    }
 
-    public long getTicketId() {
-        return ticketId;
-    }
 
     public String getSubject() {
         return subject;

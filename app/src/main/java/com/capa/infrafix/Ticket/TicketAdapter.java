@@ -1,8 +1,5 @@
 package com.capa.infrafix.Ticket;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +43,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             Glide.with(holder.root.getContext()).load(file).into(holder.imageView);
         }
 
-
-
         holder.textView.setText(ticket.getSubject());
         holder.root.setOnClickListener(view -> {
             listener.onTicketClicked(position, ticket);
@@ -82,17 +77,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             this.imageView = itemView.findViewById(R.id.imageViewTicketImage);
             this.textView = itemView.findViewById(R.id.textViewTicketSubject);
             this.root = itemView;
-        }
-
-        public void setImageView(String encodedString){
-            try{
-                byte[] encodedByte = Base64.decode(encodedString,Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(encodedByte,0, encodedByte.length);
-                this.imageView.setImageBitmap(bitmap);
-            }catch (Exception exception){
-                exception.getMessage();
-            }
-
         }
 
     }

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -101,7 +102,7 @@ public class FormFragment extends Fragment {
                             LatLng loc;
 
                             try {
-                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 100);
+                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
                                 loc = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
@@ -200,16 +201,17 @@ public class FormFragment extends Fragment {
             }
 
             Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
-                    this.viewModelForm.getImageFileNames(),
-                    this.addresses.get(0).getLatitude(),
-                    this.addresses.get(0).getLongitude());
+                    viewModelForm.getImageFileNames(),
+                    addresses.get(0).getLatitude(),
+                    addresses.get(0).getLongitude());
+
 
             if (!somethingWrong) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.send);
 
                 builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                    this.viewModelForm.createTicket(ticket);
+
 
                     try {
                         this.viewModelForm.createTicketApi(ticket);

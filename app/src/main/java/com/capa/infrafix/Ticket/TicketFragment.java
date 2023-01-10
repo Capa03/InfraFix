@@ -64,7 +64,7 @@ public class TicketFragment extends Fragment {
         this.adapter = new TicketAdapter(new TicketAdapter.TicketAdapterListener() {
             @Override
             public void onTicketClicked(int position, Ticket ticket) {
-                NavDirections action = TicketFragmentDirections.actionTicketFragmentToTicketDetailFragment5((int) ticket.getTicketId());
+                NavDirections action = TicketFragmentDirections.actionTicketFragmentToTicketDetailFragment5(ticket.getId());
                 Navigation.findNavController(view).navigate(action);
             }
 
@@ -76,7 +76,7 @@ public class TicketFragment extends Fragment {
 
                 builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                     viewModelTicket.deleteTicket(ticket);
-                    viewModelTicket.deleteTicketApi((int) ticket.getTicketId());
+                    viewModelTicket.deleteTicketApi(ticket.getId());
                 });
                 builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
                 AlertDialog dialog = builder.create();

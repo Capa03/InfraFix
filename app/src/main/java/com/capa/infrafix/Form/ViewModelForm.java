@@ -44,17 +44,6 @@ public class ViewModelForm extends AndroidViewModel {
     }
 
 
-    public boolean createTicket(Ticket ticket) {
-        new Thread(() -> {
-            try {
-                ticketDAO.createTicket(ticket);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-        return true;
-    }
-
     public void createTicketApi(Ticket ticket){
         this.ticketRepository.createTicketApi(ticket);
     }

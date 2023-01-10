@@ -17,13 +17,13 @@ public interface TicketDAO {
     @Query("SELECT * FROM Ticket")
     LiveData<List<Ticket>> getAllTicket();
 
-    @Query("SELECT * FROM Ticket WHERE ticketId = :id")
+    @Query("SELECT * FROM Ticket WHERE id = :id")
     LiveData<Ticket> getTicket(int id);
 
     @Query("DELETE FROM Ticket")
     void clearTable();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void createTicket(Ticket ticket);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
