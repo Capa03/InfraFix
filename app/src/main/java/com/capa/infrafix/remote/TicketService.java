@@ -1,6 +1,6 @@
 package com.capa.infrafix.remote;
 
-import com.capa.infrafix.Ticket.Ticket;
+import com.capa.infrafix.model.Ticket;
 import com.capa.infrafix.model.TicketOutDTO;
 
 import java.util.List;

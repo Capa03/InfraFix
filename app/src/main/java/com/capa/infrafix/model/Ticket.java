@@ -1,4 +1,4 @@
-package com.capa.infrafix.Ticket;
+package com.capa.infrafix.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -19,6 +19,7 @@ public class Ticket {
     private List<String> pictureTicket;
     private double lat;
     private double lng;
+    private boolean internet;
 
     public int getId() {
         return id;

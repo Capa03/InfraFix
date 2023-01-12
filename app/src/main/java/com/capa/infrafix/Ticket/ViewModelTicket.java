@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.capa.infrafix.localdatabase.AppDatabase;
 import com.capa.infrafix.localdatabase.TicketDAO;
+import com.capa.infrafix.model.Ticket;
 import com.capa.infrafix.repository.TicketRepository;
 
 import java.util.List;

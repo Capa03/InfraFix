@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.capa.infrafix.Ticket.Ticket;
+import com.capa.infrafix.model.Ticket;
 
 import java.util.List;
 

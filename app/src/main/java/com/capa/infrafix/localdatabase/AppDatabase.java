@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.capa.infrafix.Ticket.Ticket;
+import com.capa.infrafix.model.Ticket;
 
 @Database(entities = {Ticket.class}, version = 1)
 @TypeConverters({Converters.class})

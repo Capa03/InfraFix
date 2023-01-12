@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
 
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImageUri);
-
                     String filename = UUID.randomUUID().toString();
                     try (FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE)) {
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);

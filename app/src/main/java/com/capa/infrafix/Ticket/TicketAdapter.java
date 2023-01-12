@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.capa.infrafix.R;
+import com.capa.infrafix.model.Ticket;
 
 import java.io.File;
 import java.util.ArrayList;

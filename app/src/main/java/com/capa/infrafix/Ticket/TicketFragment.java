@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capa.infrafix.R;
+import com.capa.infrafix.model.Ticket;
 
 public class TicketFragment extends Fragment {
 
