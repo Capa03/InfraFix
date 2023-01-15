@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">InfraFix</string>
 
-    <string name="preview_area" />
-    <string name="capture" />
+    <string name="preview_area" translatable="false" />
+    <string name="capture" translatable="false" />
     <string name="description">Description</string>
     <string name="date">Date</string>
     <string name="title_ticket">Title</string>
     <string name="button_send">Send</string>
-    <string name="todo">TODO</string>
+    <string name="todo" translatable="false">TODO</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="thank_you_for_your_report">Thank you for your report!</string>
     <string name="check_your_ticket_page_form_more_details">Check Your Ticket Page form more Details!</string>
     <string name="back">Back</string>
@@ -26,4 +26,6 @@
     <string name="DateEmpty">Date Can not be Empty</string>
     <string name="ImageEmpty">Image Can not be Empty</string>
     <string name="send">Do you will Continue?</string>
+    <string name="camera" translatable="false">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

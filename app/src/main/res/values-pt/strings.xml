@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">InfraFix</string>
+    <string name="description">Descrição</string>
+    <string name="date">Data</string>
+    <string name="title_ticket">Titulo</string>
+    <string name="button_send">Enviar</string>
+    <string name="thank_you_for_your_report">Obrigado pelo seu Relatorio</string>
+    <string name="check_your_ticket_page_form_more_details">Verifica a tua pagina de Relatorio para mais detalhes!</string>
+    <string name="back">Voltar</string>
+    <string name="subject">Assunto</string>
+    <string name="ticket">Relatorio</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="do_you_want_leave_us">Deseja abandonar nos?</string>
+    <string name="details">Detalhes</string>
+    <string name="delete">Tem a certeza que deseja eliminar este relatorio?</string>
+    <string name="TitleEmpty">O titulo não pode ser vazio</string>
+    <string name="DescriptionEmpty">A Descrição não pode ser vazia</string>
+    <string name="DateEmpty">A Data não pode ser vazia</string>
+    <string name="ImageEmpty">A Imagem não pode ser vazia</string>
+    <string name="send">Deseja continuar?</string>
+    <string name="gallery">Galeria</string>
+    <string name="form">Formulario</string>
+</resources>

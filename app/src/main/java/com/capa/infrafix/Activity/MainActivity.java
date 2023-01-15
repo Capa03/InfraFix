@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
             if (result.getResultCode() == Activity.RESULT_OK) {
                 try {
                     Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+
                     String filename = UUID.randomUUID().toString();
                     try (FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE)) {
                         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
             if (result.getResultCode() == Activity.RESULT_OK) {
                 // you will get result here in result.data
                 Uri selectedImageUri = result.getData().getData();
-
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImageUri);
                     String filename = UUID.randomUUID().toString();
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
             }
         });
     }
+
+
 
     private void bottomMenu(){
 
