@@ -32,10 +32,6 @@ public class ViewModelForm extends AndroidViewModel {
         this.ticketRepository = new TicketRepository(application.getApplicationContext());
     }
 
-    public LiveData<List<Ticket>> getTickets(){
-        return this.ticketRepository.getTicketList();
-    }
-
 
     public void createTicketApi(Ticket ticket){
         this.ticketRepository.createTicketApi(ticket);

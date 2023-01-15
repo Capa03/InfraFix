@@ -19,7 +19,7 @@ public class Ticket {
     private List<String> pictureTicket;
     private double lat;
     private double lng;
-    private boolean internet;
+
 
     public int getId() {
         return id;
