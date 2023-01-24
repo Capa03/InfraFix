@@ -9,11 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import com.capa.infrafix.model.Ticket;
-import com.capa.infrafix.localdatabase.AppDatabase;
-import com.capa.infrafix.localdatabase.TicketDAO;
 import com.capa.infrafix.repository.TicketRepository;
 
 import java.util.ArrayList;
@@ -22,10 +19,11 @@ import java.util.List;
 public class ViewModelForm extends AndroidViewModel {
 
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"};
-    private final int LOCATION_PERMISSION_CODE = 101;
     private Context context;
     private List<String> imageFileNames = new ArrayList<>();
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
+    private boolean stateImage;
+
     public ViewModelForm(@NonNull Application application) {
         super(application);
         this.context = application.getApplicationContext();
@@ -50,6 +48,7 @@ public class ViewModelForm extends AndroidViewModel {
     }
 
     public void requestPermission(Activity activity){
+        int LOCATION_PERMISSION_CODE = 101;
         for (String required_permission : REQUIRED_PERMISSIONS) {
             ActivityCompat.requestPermissions(activity, new String[]{required_permission}, LOCATION_PERMISSION_CODE);
         }
@@ -62,6 +61,8 @@ public class ViewModelForm extends AndroidViewModel {
     public void addImageFileName(String fileName){
         imageFileNames.add(fileName);
     }
+
+
 }
 
 

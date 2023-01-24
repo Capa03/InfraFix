@@ -131,7 +131,7 @@ public class FormFragment extends Fragment {
 
         ViewModelMain viewModelMain = new ViewModelProvider(requireActivity()).get(ViewModelMain.class);
 
-        viewModelMain.getImages().observe(getViewLifecycleOwner(), imageFileName -> {
+        viewModelMain.getImagesLiveData().observe(getViewLifecycleOwner(), imageFileName -> {
             // Store imageFileName
             boolean found = false;
             for (String imageName : this.viewModelForm.getImageFileNames()) {
@@ -143,13 +143,14 @@ public class FormFragment extends Fragment {
             if (!found) {
                 this.viewModelForm.addImageFileName(imageFileName);
             }
+
             adapter.updateList(this.viewModelForm.getImageFileNames());
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewImageForm);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
-        this.adapter = new FormAdapter();
+        this.adapter = new FormAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
 
@@ -214,6 +215,9 @@ public class FormFragment extends Fragment {
 
                     try {
                         this.viewModelForm.createTicketApi(ticket);
+                        this.adapter.setTrashState(false);
+                        
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -236,6 +240,8 @@ public class FormFragment extends Fragment {
 
 
     }
+
+
 
     private void updateCalendar() {
         String format = "MM/dd/yy";

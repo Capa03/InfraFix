@@ -1,7 +1,7 @@
 package com.capa.infrafix.Form;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,9 +25,10 @@ public class FormAdapter extends RecyclerView.Adapter<FormAdapter.FormViewHolder
     private List<String> images;
 
     private boolean trashState = false;
-
-    public FormAdapter() {
+    private ViewModelForm viewModel;
+    public FormAdapter(Context context) {
         images = new ArrayList<>();
+        this.viewModel =  new ViewModelProvider((ViewModelStoreOwner) context).get(ViewModelForm.class);
     }
 
     @NonNull
@@ -56,6 +59,7 @@ public class FormAdapter extends RecyclerView.Adapter<FormAdapter.FormViewHolder
                 notifyDataSetChanged();
             }
         });
+
 
         if(!trashState){
             holder.trash.setVisibility(View.GONE);

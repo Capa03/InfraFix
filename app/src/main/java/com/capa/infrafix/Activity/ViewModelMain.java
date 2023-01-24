@@ -49,7 +49,7 @@ public class ViewModelMain extends AndroidViewModel {
         reportImagesLiveData.postValue(newImage);
     }
 
-    public LiveData<String> getImages() {
+    public LiveData<String> getImagesLiveData() {
         return reportImagesLiveData;
     }
 }

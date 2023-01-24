@@ -21,8 +21,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TicketRepository {
-    private String URL_HOME = "http://192.168.1.71:5011/api/";
-    private String URL_ANDROID = "http://10.0.2.2:5011/api/";
+    private final String URL_HOME = "http://192.168.1.73:5011/api/";
+    private final String URL_ANDROID = "http://10.0.2.2:5011/api/";
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(URL_HOME)
             .addConverterFactory(GsonConverterFactory.create())
@@ -71,7 +71,6 @@ public class TicketRepository {
             public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                 if (response.isSuccessful()) {
                     executor.execute(() -> {
-
                         ticketDAO.clearTable();
                         for(Ticket ticket : response.body()){
                             ticketDAO.createTicket(ticket);
