@@ -22,13 +22,12 @@ import java.util.List;
 
 public class FormAdapter extends RecyclerView.Adapter<FormAdapter.FormViewHolder> {
 
-    private List<String> images;
+    private List<String> images = new ArrayList<>();;
 
     private boolean trashState = false;
-    private ViewModelForm viewModel;
-    public FormAdapter(Context context) {
-        images = new ArrayList<>();
-        this.viewModel =  new ViewModelProvider((ViewModelStoreOwner) context).get(ViewModelForm.class);
+    private FormEventListener listener;
+    public FormAdapter(FormEventListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -55,8 +54,7 @@ public class FormAdapter extends RecyclerView.Adapter<FormAdapter.FormViewHolder
         holder.trash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                images.remove(position);
-                notifyDataSetChanged();
+             listener.onDeleteClicked(imageFileName);
             }
         });
 
@@ -103,4 +101,7 @@ public class FormAdapter extends RecyclerView.Adapter<FormAdapter.FormViewHolder
 
     }
 
+    public interface FormEventListener {
+        void onDeleteClicked(String fileName);
+    }
 }

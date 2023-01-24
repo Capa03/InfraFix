@@ -49,11 +49,16 @@ public class TicketRepository {
     public void createTicketApi(Ticket ticket) {
         TicketOutDTO ticketOut = new TicketOutDTO(ticket.getSubject(), ticket.getDescription()
                 , ticket.getDate(), ticket.getPictureTicket(), ticket.getLat(), ticket.getLng());
+        executor.execute(() -> ticketDAO.createTicket(ticket));
+
+
         this.ticketService.createTicket(ticketOut).enqueue(new Callback<Ticket>() {
             @Override
             public void onResponse(Call<Ticket> call, Response<Ticket> response) {
                 if (response.isSuccessful()) {
-                    executor.execute(() -> ticketDAO.createTicket(response.body()));
+                    executor.execute(() -> {
+                        refreshTicket();
+                    });
                 }
             }
 
@@ -72,7 +77,7 @@ public class TicketRepository {
                 if (response.isSuccessful()) {
                     executor.execute(() -> {
                         ticketDAO.clearTable();
-                        for(Ticket ticket : response.body()){
+                        for (Ticket ticket : response.body()) {
                             ticketDAO.createTicket(ticket);
                         }
                     });

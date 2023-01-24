@@ -22,7 +22,7 @@ public class ViewModelForm extends AndroidViewModel {
     private Context context;
     private List<String> imageFileNames = new ArrayList<>();
     private final TicketRepository ticketRepository;
-    private boolean stateImage;
+
 
     public ViewModelForm(@NonNull Application application) {
         super(application);
@@ -62,7 +62,9 @@ public class ViewModelForm extends AndroidViewModel {
         imageFileNames.add(fileName);
     }
 
-
+    public void removeImageFileName(String fileName) {
+        imageFileNames.remove(fileName);
+    }
 }
 
 

@@ -101,6 +101,7 @@ public class TicketFragment extends Fragment {
         this.viewModelTicket.refreshTicket();
     }
 
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

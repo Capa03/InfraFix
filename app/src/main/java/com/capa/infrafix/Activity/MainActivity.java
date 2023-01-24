@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
 
     private ActivityResultLauncher<Intent> captureImageLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
+    public String lastImageAdd = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
                         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
                         fos.flush();
                     }
-                    viewModel.reportImage(filename);
+                    lastImageAdd = filename;
                 } catch (Exception e) {
 
                 }
@@ -79,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements TicketDetailFragm
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
                         fos.flush();
                     }
-                    viewModel.reportImage(filename);
+
+                    lastImageAdd = filename;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

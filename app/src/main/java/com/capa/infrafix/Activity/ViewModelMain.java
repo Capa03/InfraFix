@@ -23,7 +23,6 @@ public class ViewModelMain extends AndroidViewModel {
         this.context = getApplication().getApplicationContext();
     }
 
-
     public void setupPermissions(Activity activity) {
         String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -42,14 +41,4 @@ public class ViewModelMain extends AndroidViewModel {
         ActivityCompat.requestPermissions(activity, permissions, 101);
     }
 
-
-    private MutableLiveData<String> reportImagesLiveData = new MutableLiveData<>();
-
-    public void reportImage(String newImage) {
-        reportImagesLiveData.postValue(newImage);
-    }
-
-    public LiveData<String> getImagesLiveData() {
-        return reportImagesLiveData;
-    }
 }

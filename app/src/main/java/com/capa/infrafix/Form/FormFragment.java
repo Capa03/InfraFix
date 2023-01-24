@@ -57,10 +57,12 @@ public class FormFragment extends Fragment {
     private FormAdapter adapter;
     private final Calendar calendar = Calendar.getInstance();
 
+    private MainActivity mainActivity;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
@@ -122,35 +124,22 @@ public class FormFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.viewModelForm = new ViewModelProvider(this).get(ViewModelForm.class);
+
 
         this.cacheViews(view);
         if (!this.viewModelForm.isLocationPermissionGranted()) {
             this.viewModelForm.requestPermission(getActivity());
         }
 
-        ViewModelMain viewModelMain = new ViewModelProvider(requireActivity()).get(ViewModelMain.class);
-
-        viewModelMain.getImagesLiveData().observe(getViewLifecycleOwner(), imageFileName -> {
-            // Store imageFileName
-            boolean found = false;
-            for (String imageName : this.viewModelForm.getImageFileNames()) {
-                if (imageName.equals(imageFileName)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                this.viewModelForm.addImageFileName(imageFileName);
-            }
-
-            adapter.updateList(this.viewModelForm.getImageFileNames());
-        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewImageForm);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
-        this.adapter = new FormAdapter(getContext());
+
+        this.adapter = new FormAdapter(fileName -> {
+            viewModelForm.removeImageFileName(fileName);
+            this.adapter.updateList(viewModelForm.getImageFileNames());
+        });
         recyclerView.setAdapter(adapter);
 
 
@@ -173,6 +162,7 @@ public class FormFragment extends Fragment {
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         send.setOnClickListener(view12 -> {
+            Ticket ticket;
             boolean somethingWrong = false;
             String titleTicket = getResources().getString(R.string.TitleEmpty);
             String dateTicket = getResources().getString(R.string.DateEmpty);
@@ -200,10 +190,18 @@ public class FormFragment extends Fragment {
                 somethingWrong = true;
             }
 
-            Ticket ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
-                    viewModelForm.getImageFileNames(),
-                    addresses.get(0).getLatitude(),
-                    addresses.get(0).getLongitude());
+            if(addresses.get(0) == null){
+                ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
+                        viewModelForm.getImageFileNames(),
+                        0.0,
+                       0.0);
+            }else{
+                ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
+                        viewModelForm.getImageFileNames(),
+                        addresses.get(0).getLatitude(),
+                        addresses.get(0).getLongitude());
+            }
+
 
 
             if (!somethingWrong) {
@@ -216,7 +214,6 @@ public class FormFragment extends Fragment {
                     try {
                         this.viewModelForm.createTicketApi(ticket);
                         this.adapter.setTrashState(false);
-                        
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -233,14 +230,14 @@ public class FormFragment extends Fragment {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
+
         });
+
 
         this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         this.mainActivityNavBar.showNavBar();
 
-
     }
-
 
 
     private void updateCalendar() {
@@ -267,7 +264,6 @@ public class FormFragment extends Fragment {
     public void onStart() {
         super.onStart();
         this.mapView.onStart();
-
     }
 
 
@@ -275,6 +271,24 @@ public class FormFragment extends Fragment {
     public void onResume() {
         super.onResume();
         this.mapView.onResume();
+
+        mainActivity = (MainActivity) getActivity();
+
+        if (!mainActivity.lastImageAdd.equals("")) {
+
+            boolean found = false;
+            for (String imageName : this.viewModelForm.getImageFileNames()) {
+                if (imageName.equals(mainActivity.lastImageAdd)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                this.viewModelForm.addImageFileName(mainActivity.lastImageAdd);
+                mainActivity.lastImageAdd = "";
+            }
+        }
+        adapter.updateList(this.viewModelForm.getImageFileNames());
     }
 
     @Override
