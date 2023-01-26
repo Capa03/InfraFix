@@ -106,7 +106,7 @@ public class FormFragment extends Fragment {
                                 addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
                                 loc = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(loc).title("New Marker"));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15f));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -144,10 +144,16 @@ public class FormFragment extends Fragment {
 
 
         Button openCamera = view.findViewById(R.id.imageButtonCamera);
-        openCamera.setOnClickListener(view1 -> ((MainActivity) requireActivity()).captureImage());
+        openCamera.setOnClickListener(view1 -> {
+            ((MainActivity) requireActivity()).captureImage();
+            this.adapter.setTrashState(false);
+        });
 
         Button openGallery = view.findViewById(R.id.imageButtonGallary);
-        openGallery.setOnClickListener(view13 -> ((MainActivity) requireActivity()).pickImage());
+        openGallery.setOnClickListener(view13 -> {
+            ((MainActivity) requireActivity()).pickImage();
+            this.adapter.setTrashState(false);
+        });
 
 
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
@@ -190,18 +196,17 @@ public class FormFragment extends Fragment {
                 somethingWrong = true;
             }
 
-            if(addresses.get(0) == null){
+            if (addresses.get(0) == null) {
                 ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
                         viewModelForm.getImageFileNames(),
                         0.0,
-                       0.0);
-            }else{
+                        0.0);
+            } else {
                 ticket = new Ticket(0, titleValue, descriptionValue, dateValue,
                         viewModelForm.getImageFileNames(),
                         addresses.get(0).getLatitude(),
                         addresses.get(0).getLongitude());
             }
-
 
 
             if (!somethingWrong) {

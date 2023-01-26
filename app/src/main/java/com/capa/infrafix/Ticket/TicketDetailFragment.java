@@ -98,7 +98,8 @@ public class TicketDetailFragment extends Fragment implements OnMapReadyCallback
         this.viewModel.getTicketById(args.getTicketId()).observe(getViewLifecycleOwner(), ticket -> {
             LatLng latLng = new LatLng(ticket.getLat(), ticket.getLng());
             googleMap.addMarker(new MarkerOptions().position(latLng).title("Position"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f));
+
         });
 
     }
