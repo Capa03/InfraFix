@@ -44,7 +44,13 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             Glide.with(holder.root.getContext()).load(file).into(holder.imageView);
         }
 
-        holder.textView.setText(ticket.getSubject());
+        if (ticket.getSubject().length() > 15) {
+            holder.textViewSubject.setText(ticket.getSubject().substring(0,14)+ "...");
+        }else {
+            holder.textViewSubject.setText(ticket.getSubject());
+        }
+
+        holder.textViewData.setText(ticket.getDate());
         holder.root.setOnClickListener(view -> {
             listener.onTicketClicked(position, ticket);
         });
@@ -70,13 +76,14 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     public class TicketViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView imageView;
-        private TextView textView;
+        private TextView textViewSubject, textViewData;
         private View root;
 
         public TicketViewHolder(@NonNull View itemView) {
             super(itemView);
             this.imageView = itemView.findViewById(R.id.imageViewTicketImage);
-            this.textView = itemView.findViewById(R.id.textViewTicketSubject);
+            this.textViewSubject = itemView.findViewById(R.id.textViewTicketSubject);
+            this.textViewData = itemView.findViewById(R.id.textViewTicketData);
             this.root = itemView;
         }
 

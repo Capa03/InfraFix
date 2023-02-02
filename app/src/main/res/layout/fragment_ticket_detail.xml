@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/description"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewTicketDetailsTitle" />
@@ -36,10 +37,10 @@
             android:id="@+id/textViewTicketDetailsDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:text="@string/date"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewTicketDetailsTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textViewTicketDetailsTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewTicketDetail" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapViewTicketDetails"

@@ -21,10 +21,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TicketRepository {
-    private final String URL_HOME = "http://192.168.1.73:5011/api/";
+    private final String URL_HOME = "http://192.168.1.70:5011/api/";
     private final String URL_ANDROID = "http://10.0.2.2:5011/api/";
     private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(URL_HOME)
+            .baseUrl(URL_ANDROID)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
